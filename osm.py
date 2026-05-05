@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import re
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -142,17 +143,17 @@ def load_sessions(app: str) -> list[Session]:
     return sessions
 
 
-def build_resume_command(app: str, session_id: str) -> list[str]:
+def build_resume_command(app: str, session_id: str) -> str:
     if app.lower() == "kilo":
-        return ["kilo", "resume", session_id]
-    return ["opencode", "-s", session_id]
+        return f"kilo resume {session_id}"
+    return f"opencode -s {session_id}"
 
 
 def try_cd_then_resume(session: Session, app: str) -> None:
     cwd = Path(session.directory).expanduser() if session.directory else None
     if cwd and cwd.exists() and cwd.is_dir():
         os.chdir(cwd)
-    subprocess.run(build_resume_command(app, session.sid), check=False)
+    subprocess.run(build_resume_command(app, session.sid), shell=True)
 
 
 def render_lines(app: str, db_path: Path, sessions: list[Session], index: int) -> FormattedText:
