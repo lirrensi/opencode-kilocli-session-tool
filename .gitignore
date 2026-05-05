@@ -2,3 +2,8 @@ __pycache__/
 .venv/
 *.pyc
 uv.lock
+check_sessions.py
+osm.egg-info/
+*.egg-info/
+dist/
+build/
